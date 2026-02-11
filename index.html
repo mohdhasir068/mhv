@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine ❤️</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#ff4d6d,#ff99ac);
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Floating Hearts */
+.heart{
+    position:fixed;
+    bottom:-20px;
+    z-index:1;
+    pointer-events:none;
+    animation:floatUp linear forwards;
+}
+@keyframes floatUp{
+    from{transform:translateY(0) scale(1);opacity:1;}
+    to{transform:translateY(-120vh) scale(1.6);opacity:0;}
+}
+
+/* Fireworks */
+.firework{
+    position:fixed;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:radial-gradient(circle,#fff,transparent);
+    box-shadow:0 0 20px #ff0,0 0 40px #f0f,0 0 60px #0ff;
+    animation:boom 1.2s ease-out forwards;
+    z-index:2;
+}
+@keyframes boom{
+    from{transform:scale(0);opacity:1;}
+    to{transform:scale(6);opacity:0;}
+}
+
+/* Card */
+.box{
+    width:90%;
+    max-width:360px;
+    background:rgba(255,255,255,0.18);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:25px;
+    text-align:center;
+    color:white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    z-index:10;
+}
+.hidden{display:none;}
+
+input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    margin:15px 0;
+    font-size:16px;
+}
+button{
+    padding:12px 22px;
+    border-radius:12px;
+    border:none;
+    font-size:15px;
+    cursor:pointer;
+    margin:8px;
+}
+.yes{background:#ff1f4b;color:white;}
+.no{position:absolute;background:white;color:#ff1f4b;}
+
+/* Gallery */
+#photoGallery{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+#photoGallery img{
+    width:100%;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND MUSIC -->
+<audio id="music" src="music.mp3" loop></audio>
+
+<!-- LOGIN -->
+<div class="box" id="login">
+    <h2>🔐 For You My Wifey 🔐</h2>
+    <p>💕 Enter the Secret Passkey 💕</p>
+    <input type="password" id="password" placeholder="Love Passkey">
+    <button class="yes" onclick="unlock()">Unlock ❤️</button>
+    <p id="error"></p>
+</div>
+
+<!-- QUESTION -->
+<div class="box hidden" id="question">
+    <h2>💘 Will You Be My Valentine? 💘</h2>
+    <p id="herName"></p>
+    <button class="yes" onclick="yesClicked()">YES 💖</button>
+</div>
+<button class="no hidden" id="noBtn">NO 💔</button>
+
+<!-- RESULT -->
+<div class="box hidden" id="result">
+    <h2>💕 YAY!!! 💕</h2>
+    <p>❤️ I knew you’d say YES ❤️</p>
+    <p>💘 Happy Valentine’s Day Wifey 💘</p>
+
+    <button class="yes" onclick="showLoveNote()">💌 Love Note</button>
+    <button class="yes" onclick="showJourney()">📖 Our Journey</button>
+    <button class="yes" onclick="photoLock()">📸 Our Photos</button>
+
+    <p id="extraText"></p>
+    <div id="photoGallery" class="hidden"></div>
+</div>
+
+<script>
+/* CONFIG */
+const herName="💕 Mariyam 💕";
+const mainPass="iloveyou";
+const photoPass="iloveyou";
+document.getElementById("herName").innerText=herName;
+
+/* Unlock */
+function unlock(){
+    if(password.value===mainPass){
+        login.classList.add("hidden");
+        question.classList.remove("hidden");
+        noBtn.classList.remove("hidden");
+        moveNo();
+
+        // Play music
+        document.getElementById("music").play();
+    }else{
+        error.innerText="Wrong password 😜";
+    }
+}
+
+/* NO button escape */
+function moveNo(){
+    noBtn.style.left=Math.random()*(innerWidth-80)+"px";
+    noBtn.style.top=Math.random()*(innerHeight-40)+"px";
+}
+noBtn.onmouseover=moveNo;
+noBtn.onclick=moveNo;
+
+/* YES */
+function yesClicked(){
+    question.classList.add("hidden");
+    noBtn.classList.add("hidden");
+    result.classList.remove("hidden");
+    fireworks();
+    heartRain();
+}
+
+/* Floating hearts */
+const hearts=["❤️","💖","💘","💝","💗"];
+const sparkles=["✨","🌟","💫"];
+setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText=Math.random()>0.7?sparkles[Math.floor(Math.random()*3)]:hearts[Math.floor(Math.random()*5)];
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=Math.random()*20+16+"px";
+    h.style.animationDuration=Math.random()*3+4+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),8000);
+},220);
+
+/* Fireworks */
+function fireworks(){
+    for(let i=0;i<25;i++){
+        const f=document.createElement("div");
+        f.className="firework";
+        f.style.left=Math.random()*100+"vw";
+        f.style.top=Math.random()*60+"vh";
+        document.body.appendChild(f);
+        setTimeout(()=>f.remove(),1200);
+    }
+}
+
+/* Heart rain */
+function heartRain(){
+    for(let i=0;i<60;i++){
+        setTimeout(()=>{
+            const h=document.createElement("div");
+            h.className="heart";
+            h.innerText="💖";
+            h.style.left=Math.random()*100+"vw";
+            h.style.fontSize=Math.random()*22+18+"px";
+            h.style.animationDuration="3s";
+            document.body.appendChild(h);
+            setTimeout(()=>h.remove(),4000);
+        },i*60);
+    }
+}
+
+/* Buttons */
+function showLoveNote(){
+    extraText.innerHTML="💌 You are my forever, my peace, my home 💖";
+    photoGallery.classList.add("hidden");
+}
+function showJourney(){
+    extraText.innerHTML="📖 From hello to forever 💫";
+    photoGallery.classList.add("hidden");
+}
+
+/* Photo lock */
+function photoLock(){
+    const p=prompt("🔐 Enter photo password 💕");
+    if(p===photoPass){
+        extraText.innerHTML="📸 Our beautiful memories 💖";
+        loadPhotos();
+    }else alert("😜 Only my Wifey knows!");
+}
+
+function loadPhotos(){
+    photoGallery.innerHTML=`
+        <img src="photo1.png">
+        <img src="photo2.png">
+        <img src="photo3.png">
+        <img src="photo4.png">
+        <img src="photo5.png">
+        <img src="photo6.png">
+        <img src="photo7.png">
+        <img src="photo8.png">
+        <img src="photo9.png">
+        <img src="photo10.png">
+        <img src="photo11.png">
+        <img src="photo12.png">
+        <img src="photo13.png">
+        <img src="photo14.png">
+        <img src="photo15.png">
+        <img src="photo16.png">
+        <img src="photo17.png">
+        <img src="photo18.png">
+        <img src="photo19.png">
+        <img src="photo20.png">
+        <img src="photo21.png">
+        <img src="photo22.png">
+        <img src="photo23.png">
+        <img src="photo24.png">
+        <img src="photo25.png">
+        <img src="photo26.png">
+        <img src="photo27.png">
+        <img src="photo28.png">
+        <img src="photo29.png">
+        <img src="photo30.png">
+        <img src="photo31.png">
+        <img src="photo32.png">
+    `;
+    photoGallery.classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
